@@ -1,44 +1,50 @@
 //Arduino Code Snipet
 
 
-//Declaration of constant variables
-#define gasSensor A0
-#define buzzer 0
-#define greenLed 10
-#define redLed 11
-#define HIGH 600
+//Declaration of variables
+int smokeSensor = A0;
+int greenLed = 10;
+int redLed = 11;
+int buzzer = 12;
+int smokeReading = 0;  // store the value which the smoke sensor reads
+int celsius;
+int green1;
+int green2;
+int green3;
 
 
-void setup() {
-
-   Serial.begin(9600);
-   
-   pinMode(gasSensor, INPUT);
-   pinMode(buzzer, OUTPUT);
-   pinMode(greenLed, OUTPUT);
-   pinMode(redLed, OUTPUT);
+void setup()
+{  
+  
+  Serial.begin(9600);
+  
+  pinMode(smokeSensor, INPUT);
+  pinMode(greenLed, OUTPUT);
+  pinMode(redLed, OUTPUT);
+  pinMode(buzzer, OUTPUT);
   
 }
 
 
-void loop() {
+void loop()
+{
+
+  smokeReading = analogRead(smokeSensor); 
+  Serial.print("Air Quality in PPM = ");
+  Serial.print(smokeReading);    
   
-  int gasValue = analogRead(gasSensor);
-
-
-  //check data from sensor if there is smoke, if will execute otherwise else will execute
-  if(gasValue > HIGH){
+  if(smokeReading <= 100){
     
-     tone(buzzer,1000,500);
-     digitalWrite(redLed, HIGH);
-     digitalWrite(greenLed,LOW);
-  }else{
-    
-     noTone(buzzer);
-     digitalWrite(greenLed,HIGH);
+     Serial.print("Fresh Air");
+     digitalWrite(greenLed, HIGH);
      digitalWrite(redLed, LOW);
+    
+  }else{
+      
+     Serial.print("Poor Air.Be careful!");
+     digitalWrite(redLed, HIGH);
+     digitalWrite(greenLed, LOW);
   }
-
-  delay(200);
   
+  delay(100);
 }
